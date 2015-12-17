@@ -82,6 +82,15 @@ The home location of the resource server
 
 Default: http://localhost:8080/osiam-resource-server
 
+### org.osiam.connector.method-based-scopes
+
+Use method-based scopes (true) or scope ADMIN (false) for connections to OSIAM
+
+Method-based scopes are deprecated and support will be removed in version 1.11 or 2.0.
+Defaults to `true` for backwards compatibility.
+
+Default: `true`
+
 # E-Mail
 
 The self administration sends E-Mails for certain operations, like registration. Thus a valid SMTP

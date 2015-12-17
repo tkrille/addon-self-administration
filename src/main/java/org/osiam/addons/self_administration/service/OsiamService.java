@@ -23,6 +23,7 @@
 
 package org.osiam.addons.self_administration.service;
 
+import org.osiam.addons.self_administration.Config;
 import org.osiam.client.OsiamConnector;
 import org.osiam.client.oauth.Scope;
 import org.osiam.client.query.Query;
@@ -36,30 +37,44 @@ import org.springframework.stereotype.Service;
 @Service
 public class OsiamService {
 
+    private final OsiamConnector osiamConnector;
+    private final Scope scope;
+
     @Autowired
-    private OsiamConnector osiamConnector;
+    public OsiamService(OsiamConnector osiamConnector, Config config) {
+        this.osiamConnector = osiamConnector;
+        if (config.useMethodBasedScopes()) {
+            scope = Scope.ALL;
+        } else {
+            scope = Scope.ADMIN;
+        }
+    }
 
     public boolean isUsernameIsAlreadyTaken(String userName) {
         Query query = new QueryBuilder().filter("userName eq \"" + userName + "\"").build();
 
-        SCIMSearchResult<User> queryResult = osiamConnector.searchUsers(query,
-                osiamConnector.retrieveAccessToken(Scope.ADMIN));
+        SCIMSearchResult<User> queryResult = osiamConnector.searchUsers(
+                query, osiamConnector.retrieveAccessToken(scope));
         return queryResult.getTotalResults() != 0L;
     }
 
     public User createUser(User user) {
-        return osiamConnector.createUser(user, osiamConnector.retrieveAccessToken(Scope.ADMIN));
+        return osiamConnector.createUser(user, osiamConnector.retrieveAccessToken(scope));
     }
 
     public User getUser(String userId) {
-        return osiamConnector.getUser(userId, osiamConnector.retrieveAccessToken(Scope.ADMIN));
+        return osiamConnector.getUser(userId, osiamConnector.retrieveAccessToken(scope));
     }
 
     public User updateUser(String userId, UpdateUser updateUser) {
-        return osiamConnector.updateUser(userId, updateUser, osiamConnector.retrieveAccessToken(Scope.ADMIN));
+        return osiamConnector.updateUser(userId, updateUser, osiamConnector.retrieveAccessToken(scope));
     }
 
     public void deleteUser(String id) {
-        osiamConnector.deleteUser(id, osiamConnector.retrieveAccessToken(Scope.ADMIN));
+        osiamConnector.deleteUser(id, osiamConnector.retrieveAccessToken(scope));
+    }
+
+    public SCIMSearchResult<User> searchUsers(Query query) {
+        return osiamConnector.searchUsers(query, osiamConnector.retrieveAccessToken(scope));
     }
 }

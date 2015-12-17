@@ -2,6 +2,7 @@ package org.osiam.addons.self_administration;
 
 import com.google.common.base.Strings;
 import org.osiam.addons.self_administration.one_time_token.ScavengerTask;
+import org.osiam.addons.self_administration.service.OsiamService;
 import org.osiam.client.OsiamConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -28,7 +29,7 @@ public class SelfAdministration extends SpringBootServletInitializer {
     }
 
     @Autowired
-    public void createOneTokenScavengers(final Config config) {
+    public void createOneTokenScavengers(final Config config, final OsiamService osiamService) {
         if (!config.isOneTimeTokenScavengerEnabled()) {
             return;
         }
@@ -36,15 +37,15 @@ public class SelfAdministration extends SpringBootServletInitializer {
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.initialize();
 
-        new ScavengerTask(taskScheduler, osiamConnector(config), config.getActivationTokenTimeout(),
+        new ScavengerTask(taskScheduler, osiamService, config.getActivationTokenTimeout(),
                 Config.EXTENSION_URN, Config.ACTIVATION_TOKEN_FIELD)
                 .start();
 
-        new ScavengerTask(taskScheduler, osiamConnector(config), config.getConfirmationTokenTimeout(),
+        new ScavengerTask(taskScheduler, osiamService, config.getConfirmationTokenTimeout(),
                 Config.EXTENSION_URN, Config.CONFIRMATION_TOKEN_FIELD, Config.TEMP_EMAIL_FIELD)
                 .start();
 
-        new ScavengerTask(taskScheduler, osiamConnector(config), config.getOneTimePasswordTimeout(),
+        new ScavengerTask(taskScheduler, osiamService, config.getOneTimePasswordTimeout(),
                 Config.EXTENSION_URN, Config.ONETIME_PASSWORD_FIELD)
                 .start();
     }

@@ -94,6 +94,9 @@ public class Config extends WebMvcConfigurerAdapter {
     @Value("${org.osiam.connector.legacy-schemas:false}")
     private boolean useLegacySchemas;
 
+    @Value("${org.osiam.connector.method-based-scopes:true}")
+    private boolean useMethodBasedScopes;
+
     @Value("${org.osiam.mail.from:selfadmin@localhost}")
     private String fromAddress;
 
@@ -171,6 +174,10 @@ public class Config extends WebMvcConfigurerAdapter {
 
     public boolean useLegacySchemas() {
         return useLegacySchemas;
+    }
+
+    public boolean useMethodBasedScopes() {
+        return useMethodBasedScopes;
     }
 
     public String getClientId() {
