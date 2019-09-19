@@ -1,9 +1,5 @@
 Welcome to OSIAM!
 
-Please have a look at the website of OSIAM: https://www.osiam.org
-GitHub: https://github.com/osiam/addon-self-administration
-Jira: https://jira.osiam.org
-
 If you want to run this OSIAM addon, please have a look at the GitHub Wiki:
 https://github.com/osiam/addon-self-administration/wiki
 
